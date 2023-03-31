@@ -16,6 +16,7 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	l1.Val += l2.Val
 
 	if l1.Val >= 10 {
+		// 生成新的节点
 		l1.Next = addTwoNumbers(&ListNode{Val: 1}, l1.Next)
 		l1.Val %= 10
 	}
@@ -37,14 +38,17 @@ func permute(nums []int) [][]int {
 	var backtrack func(nums, path []int, used []bool)
 
 	backtrack = func(nums, path []int, used []bool) {
+		// 终止条件
 		if len(path) == len(nums) {
-			val := make([]int, len(nums))
-			copy(val, path)
-			res = append(res, val)
+			//val := make([]int, len(nums))
+			//copy(val, path)
+			//res = append(res, val)
+			res = append(res, append([]int(nil), path...))
 			return
 		}
 
 		for i := 0; i < len(nums); i++ {
+			// 当前位置的元素使用过
 			if !used[i] {
 				path = append(path, nums[i])
 				used[i] = true
@@ -75,6 +79,7 @@ func subsets(nums []int) [][]int {
 
 		res = append(res, append([]int(nil), path...))
 
+		// 从当前哪个位置开始
 		for i := start; i < len(nums); i++ {
 			path = append(path, nums[i])
 
@@ -99,23 +104,28 @@ func generateParenthesis(n int) []string {
 	path := ""
 	var backtrack func(int, int)
 	backtrack = func(left int, right int) {
+		// 终止条件 没有可以添加的括号
 		if left < 0 || right < 0 {
 			return
 		}
 
+		//不合法的括号
 		if right < left {
 			return
 		}
 
+		//合法的一个结果
 		if left == 0 && right == 0 {
 			res = append(res, path)
 			return
 		}
 
+		//添加左括号
 		path += "("
 		backtrack(left-1, right)
 		path = path[:len(path)-1]
 
+		//添加右括号
 		path += ")"
 		backtrack(left, right-1)
 		path = path[:len(path)-1]
@@ -138,6 +148,7 @@ func convertBST(root *TreeNode) *TreeNode {
 
 	var preOrder func(*TreeNode)
 
+	// 先序遍历的逆序
 	preOrder = func(node *TreeNode) {
 		if node != nil {
 			preOrder(node.Right)
@@ -158,6 +169,7 @@ func convertBST(root *TreeNode) *TreeNode {
 238 除自身以外数组的乘积
 */
 func productExceptSelf(nums []int) []int {
+	//left[i] 表示[0, i-1]的乘积
 	left := make([]int, len(nums))
 	left[0] = 1
 	for i := 1; i < len(nums); i++ {
@@ -183,6 +195,10 @@ func productExceptSelf(nums []int) []int {
 必须在不使用库内置的 sort 函数的情况下解决这个问题
 */
 func sortColors(nums []int) {
+	// 三路快拍的partition 荷兰国旗问题
+	// nums[0, left] = 0
+	// nums[left+1, cur] = 1
+	// nums[right, len(nums) - 1] = 2
 	left := -1
 	right := len(nums)
 	cur := 0
@@ -261,7 +277,9 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 
 /*
 * 739. 每日温度
- */
+
+单调栈解法
+*/
 func dailyTemperatures(temperatures []int) []int {
 	res := make([]int, len(temperatures))
 	stack := make([]int, 0)
@@ -286,9 +304,31 @@ func dailyTemperatures(temperatures []int) []int {
 /*
 * 114. 二叉树展开为链表
  */
-//TODO
 func flatten(root *TreeNode) {
+	for root != nil {
+		// 左子树为空的时候 直接指向右子树
+		if root.Left == nil {
+			root = root.Right
+		} else {
+			// 找到左子树最右边的节点
+			pre := root.Left
+			for pre.Right != nil {
+				pre = pre.Right
+			}
 
+			// 左子树最右边的节点指向root的right
+			pre.Right = root.Right
+
+			// root的右节点指向root的左节点
+			root.Right = root.Left
+
+			// root的左节点置空
+			root.Left = nil
+
+			//root指向他的右节点
+			root = root.Right
+		}
+	}
 }
 
 /**
