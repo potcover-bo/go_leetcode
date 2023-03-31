@@ -3,8 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{2, 0, 2, 1, 1, 0}
-	sortColors(nums)
-	fmt.Println(nums)
+	res := numTrees(3)
+
+	fmt.Println(res)
 
 }

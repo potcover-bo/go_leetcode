@@ -264,7 +264,105 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
  */
 func dailyTemperatures(temperatures []int) []int {
 	res := make([]int, len(temperatures))
+	stack := make([]int, 0)
+	for i := 0; i < len(temperatures); i++ {
+		if len(stack) == 0 {
+			stack = append(stack, i)
+		} else {
+			for len(stack) != 0 && temperatures[i] > temperatures[stack[len(stack)-1]] {
+				curIndex := stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+				res[curIndex] = i - curIndex
+
+			}
+			stack = append(stack, i)
+		}
+	}
 
 	return res
 
+}
+
+/*
+* 114. 二叉树展开为链表
+ */
+//TODO
+func flatten(root *TreeNode) {
+
+}
+
+/**
+236、二叉树的最近公共祖先
+
+	两个节点 p,q 分为两种情况：
+		p 和 q 在相同子树中
+		p 和 q 在不同子树中
+
+
+	从根节点遍历，递归向左右子树查询节点信息
+	递归终止条件：如果当前节点为空或等于 p 或 q，则返回当前节点
+
+	递归遍历左右子树，如果左右子树查到节点都不为空，
+	则表明 p 和 q 分别在左右子树中，因此，当前节点即为最近公共祖先；
+	如果左右子树其中一个不为空，则返回非空节点。
+*/
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	// root == nil  已经到了叶子节点没有找到 直接返回
+	// p == root、q == root p或者q的祖先节点就是root
+	if root == nil || p == root || q == root {
+		return root
+	}
+
+	// 以root为根的左子树中 p和q的公共祖先
+	left := lowestCommonAncestor(root.Left, p, q)
+	// 以root为根的右子树中 p和q的公共祖先
+	right := lowestCommonAncestor(root.Right, p, q)
+
+	// left和right都不为空的时候 说明root就是最近的公共祖先
+	if left != nil && right != nil {
+		return root
+	}
+
+	//左子树中没找到 返回右子树
+	if left == nil {
+		return right
+	} else {
+		// 说明右子树为空 左子树中去找
+		return left
+	}
+}
+
+/*
+*
+96. 不同的二叉搜索树
+*/
+func numTrees(n int) int {
+	cntMap := make([]int, n+1)
+
+	var memo func(int) int
+
+	memo = func(cur int) int {
+		if cur == 0 || cur == 1 {
+			return 1
+		}
+
+		if cntMap[cur] != 0 {
+			return cntMap[cur]
+		}
+
+		cnt := 0
+		for i := 1; i <= cur; i++ {
+			left := memo(i - 1)
+
+			right := memo(n - i)
+
+			cnt += left * right
+		}
+
+		cntMap[cur] = cnt
+
+		return cnt
+	}
+
+	return memo(n)
 }
