@@ -3,11 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	permute := permute([]int{1, 2, 3})
-
-	subsets := subsets([]int{1, 2, 3})
-
-	fmt.Println(permute)
-	fmt.Println(subsets)
+	nums := []int{1, 3, -1, -3, 5, 3, 6, 7}
+	res := maxSlidingWindow(nums, 3)
+	fmt.Println(res)
 
 }
