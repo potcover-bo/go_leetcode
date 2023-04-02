@@ -7,3 +7,9 @@ func Max(x, y int) int {
 	}
 	return y
 }
+
+func Swap(x, y int, nums []int) {
+	temp := nums[x]
+	nums[x] = nums[y]
+	nums[y] = temp
+}
